@@ -1,0 +1,29 @@
+{
+  "name": "vtinfo",
+  "version": "0.0.1",
+  "description": "Project",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "tape test/*.test.js",
+    "install": "node-pre-gyp install --fallback-to-build",
+    "docs": "documentation build src/*.cpp --polyglot -f md -o API.md"
+  },
+  "author": "Mapbox",
+  "license": "ISC",
+  "dependencies": {
+    "nan": "^2.3.5",
+    "node-pre-gyp": "^0.6.28",
+    "protozero": "^1.3.0"
+  },
+  "devDependencies": {
+    "documentation": "^4.0.0-beta5",
+    "tape": "^4.5.1"
+  },
+  "binary": {
+    "module_name": "vtinfo",
+    "module_path": "./lib/binding/",
+    "host": "https://mapbox-node-binary.s3.amazonaws.com",
+    "remote_path": "./{name}/v{version}/{configuration}/",
+    "package_name": "{node_abi}-{platform}-{arch}.tar.gz"
+  }
+}
