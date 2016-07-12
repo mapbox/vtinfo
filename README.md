@@ -23,13 +23,28 @@ var buffer = fs.readFileSync('/path/to/tile.vector.pbf');
 var info = vtinfo(buffer);
 console.log(info);
 // { layers: 
-//    [ { name: 'landuse', version: 2 },
-//      { name: 'water', version: 2 },
-//      { name: 'building', version: 2 },
-//      { name: 'road', version: 2 },
-//      { name: 'poi_label', version: 2 },
-//      { name: 'road_label', version: 2 },
-//      { name: 'housenum_label', version: 2 } ] }
+//    [ { name: 'landuse',
+//        version: 2,
+//        unknown_features: 0,
+//        point_features: 0,
+//        line_features: 0,
+//        polygon_features: 5,
+//        invalid_features: 0 },
+//      { name: 'water',
+//        version: 2,
+//        unknown_features: 0,
+//        point_features: 0,
+//        line_features: 0,
+//        polygon_features: 3,
+//        invalid_features: 0 } 
+//   ]
+// }
+```
+
+Command line
+
+```bash
+vtinfo <path to tile>
 ```
 
 # Develop & Test

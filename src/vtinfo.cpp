@@ -50,8 +50,14 @@ NAN_METHOD(info)
 
             v8::Local<v8::Object> layer_obj = Nan::New<v8::Object>();
             
+            // set up keys for layer_obj
             std::string layer_name;
             std::uint32_t layer_version;
+            std::uint64_t unknown_feature_count = 0;
+            std::uint64_t point_feature_count = 0;
+            std::uint64_t line_feature_count = 0;
+            std::uint64_t polygon_feature_count = 0;
+            std::uint64_t invalid_feature_count = 0;
 
             while (layer.next()) {
                 switch(layer.tag()) {
@@ -59,8 +65,33 @@ NAN_METHOD(info)
                         layer_name = layer.get_string();
                         break;
                     case 2: // features
-                        layer.skip();
+                    {
+                        // create feature reader
+                        auto feature_data = layer.get_data();
+                        protozero::pbf_reader feature(feature_data);
+
+                        // loop through feature GeomType
+                        while (feature.next(3)) {
+                            std::int32_t type = feature.get_enum();
+                            if (type == 1) {
+                                ++point_feature_count;
+                            }
+                            else if (type == 2) {
+                                ++line_feature_count;
+                            }
+                            else if (type == 3) {
+                                ++polygon_feature_count;
+                            }
+                            else if (type == 0) {
+                                ++unknown_feature_count;
+                            }
+                            else {
+                                ++invalid_feature_count;
+                            }
+                        }
+
                         break;
+                    }
                     case 3: // key
                         layer.skip();
                         break;
@@ -75,11 +106,17 @@ NAN_METHOD(info)
                         break;
                     default:
                         throw std::runtime_error("unknown field type " + std::to_string(layer.tag()) + " in layer");
+                        break;
                 }
             }
 
             layer_obj->Set(Nan::New("name").ToLocalChecked(), Nan::New<v8::String>(layer_name).ToLocalChecked());
             layer_obj->Set(Nan::New("version").ToLocalChecked(), Nan::New<v8::Number>(layer_version));
+            layer_obj->Set(Nan::New("unknown_features").ToLocalChecked(), Nan::New<v8::Number>(unknown_feature_count));
+            layer_obj->Set(Nan::New("point_features").ToLocalChecked(), Nan::New<v8::Number>(point_feature_count));
+            layer_obj->Set(Nan::New("line_features").ToLocalChecked(), Nan::New<v8::Number>(line_feature_count));
+            layer_obj->Set(Nan::New("polygon_features").ToLocalChecked(), Nan::New<v8::Number>(polygon_feature_count));
+            layer_obj->Set(Nan::New("invalid_features").ToLocalChecked(), Nan::New<v8::Number>(invalid_feature_count));
 
             // add layer object to final layers array
             layers->Set(layers_size++, layer_obj);

@@ -9,6 +9,7 @@ test('reads the buffer as expected', function(t) {
   t.equal(info.layers.length, 7, 'expected number of layers');
   t.equal(info.layers[0].name, 'landuse', 'layer names converted properly');
   t.equal(info.layers[0].version, 2, 'version converted properly');
+  t.equal(info.layers[0].polygon_features, 5, 'geometry counts stored properly');
   t.end();
 });
 
