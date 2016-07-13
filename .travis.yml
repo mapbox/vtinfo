@@ -1,57 +1,50 @@
 language: generic
-
 sudo: false
-
 cache: apt
-
-# don't re-build for tags so that [publish binary] is not re-run
-# https://github.com/travis-ci/travis-ci/issues/1532
 branches:
   except:
-    - /^v[0-9]/
-
+  - "/^v[0-9]/"
 addons:
   apt:
-    sources: [ 'ubuntu-toolchain-r-test' ]
-    packages: [ 'libstdc++6','libstdc++-5-dev' ]
-
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - libstdc++6
+    - libstdc++-5-dev
 env:
   global:
-    - LSAN_OPTIONS=suppressions=scripts/leak_suppressions.txt
-
+  - LSAN_OPTIONS=suppressions=scripts/leak_suppressions.txt
+  - secure: S7rOqNA6xFhRxtvC1Ah0ACahVGM/liZTdws/2VgCG5XhYr1wfU040trXhqA9GPJBp9Nu+mfoCP/IwstZKKgTc/nfoUhJeN4Ovat7WkQLoJx/APCA/Yv43EnIe/3BUHbfeBVDvDBrg6yrswxnOOqa2zWLaSgw2X/jgtd9JJokz/IZBhBiImnxgF1wRI3hvFaxkAwHhy/RJy4roCvdee019tnZ+dsm9WyoDv2Nwa/g+qcqYEPEX6uo2FRV+1qZdrcIa2a/4raGLJqujHtDfSPA3St80ACM+i4ZDIJ+bEAL9hMyluI1CBSPvS35RrjqUj21mFLPYObitbeLHJvhUSxPA5Q8tE9yQQDg7WjaIn9Lq/9m/Szxa+7BRJrKls1jRwR2By0KcdrwvXRVLTdSwcQw/XOjUV0oE0IGHA3m7Mqtz9Az515poKxuc9szXYBomDPjC/hMD+EVsa3PNJxXmHJplHNmob1IWFX43pV3KKBG2PWWV+LxzxfqvI8hIX6P8Ms6/gTdfTbH8dNWxdLtEDGZXNLQxL8pzGwXnzhimV6HgksnOUaoOxK+SBoRRW72C8JbUonZ35V2R4jBkIbRpe7hQ3NtYWBXm6arkhEIGeSytFbgctyvSj03fagYKVZBGJeUH6qaOIM4eI9O/YIz2A3DggrpOOC+QpOoexOD+D/kcg0=
+  - secure: LmIgzJb/Tp97AnMh7WJmBx5mh9KX5qBFJCoTsxqe9uttmoaMMnvMxeAZDKR2j1DEvK/hk9n1ncf071Hgi/KPvEhbC0BxKS1RGR6M94Axv05iNN+Vqf86w/4zWYdaiLuLcaZJvRO2Plm71B76HgfjcIwFPEL94jKovIOf+z3gHhqA+/E01ukLsexu7nStuBbfQYLusURr0bW7YowQBqbSP9962Peq+ZkAzIgEh6+XIpGU1SP1rM2WH1fKo/N9m7cIL7EW++Th7aYeaT+ivLNTGMZAm36wJKRS47c492UWvUBIV36QofvUfhOdHA1M6uMkBEh0SmW66flntjhjzjxIqhnDPcQ3zIYg2UvJf1f5GLZnFOoIsZRX+44xcyGPEAaYb/3ixYxG8+hsl9Ac2EVst2+oNIt9Pa1zaWMmdip21YYeZL5UUymsB2GEedRXGR9YXA1qsROvzYfT/aNo1aVDh48xaTOyqpnqsHJvc2p1zHVIV3I7D9iYirIqRAtmx11f7Jz8gU+jQoDyIb+yma1mS/LO/+2T92xPJ+O/DCp7uhLNIdIo/AdNNO97VUhYqSBRG2MntcPgX7R48ns4pT7BUMT+mCqNdftBl/ikeHTFoHXaFr1+RrqM+1p0KXO0wwhQXsp0hzxVWYxHHPZim59GryIH2d+bm1qA9ESLOXsJ2ZM=
 matrix:
   include:
-    - os: linux
-    - os: linux
-      env: CXXFLAGS="-fsanitize=address" LDFLAGS="-fsanitize=address" NPM_FLAGS="--debug" ASAN_OPTIONS=detect_leaks=1 PUBLISHABLE=true
-    - os: osx
-      osx_image: xcode7
-      compiler: clang
-      env: PUBLISHABLE=true
-
+  - os: linux
+  - os: linux
+    env: CXXFLAGS="-fsanitize=address" LDFLAGS="-fsanitize=address" NPM_FLAGS="--debug"
+      ASAN_OPTIONS=detect_leaks=1 PUBLISHABLE=true
+  - os: osx
+    osx_image: xcode7
+    compiler: clang
+    env: PUBLISHABLE=true
 before_install:
-  - source ./scripts/travis_setup.sh
-  - node -v
-  - which node
-  - clang++ -v
-  - which clang++
-
+- source ./scripts/travis_setup.sh
+- node -v
+- which node
+- clang++ -v
+- which clang++
 install:
-  - ASAN_OPTIONS=detect_leaks=0 npm install --build-from-source ${NPM_FLAGS}
-
+- ASAN_OPTIONS=detect_leaks=0 npm install --build-from-source ${NPM_FLAGS}
 before_script:
-  - node-pre-gyp package testpackage ${NPM_FLAGS}
-  - |
-    if [[ ${PUBLISHABLE} == true ]]; then
-      ./scripts/publish.sh;
-    fi;
-
+- node-pre-gyp package testpackage ${NPM_FLAGS}
+- |
+  if [[ ${PUBLISHABLE} == true ]]; then
+    ./scripts/publish.sh;
+  fi;
 script:
-  - echo ${ASAN_OPTIONS}
-  - npm test
-
+- echo ${ASAN_OPTIONS}
+- npm test
 after_success:
-  - |
-    if [ -n "${COVERAGE}" ]; then
-      bash <(curl -s https://codecov.io/bash)
-    fi
+- |-
+  if [ -n "${COVERAGE}" ]; then
+    bash <(curl -s https://codecov.io/bash)
+  fi
