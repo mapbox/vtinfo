@@ -17,7 +17,7 @@ addons:
 
 env:
   global:
-   - LSAN_OPTIONS=suppressions=scripts/leak_suppressions.txt
+    - LSAN_OPTIONS=suppressions=scripts/leak_suppressions.txt
 
 matrix:
   include:
@@ -30,23 +30,25 @@ matrix:
       env: PUBLISHABLE=true
 
 before_install:
- - source ./scripts/travis_setup.sh
- - node -v
- - which node
- - clang++ -v
- - which clang++
+  - source ./scripts/travis_setup.sh
+  - node -v
+  - which node
+  - clang++ -v
+  - which clang++
 
 install:
- - ASAN_OPTIONS=detect_leaks=0 npm install --build-from-source ${NPM_FLAGS}
+  - ASAN_OPTIONS=detect_leaks=0 npm install --build-from-source ${NPM_FLAGS}
 
 before_script:
-- if [[ ${PUBLISHABLE} == true ]]; then
-    ./scripts/publish.sh;
-  fi;
+  - node-pre-gyp package testpackage ${NPM_FLAGS}
+  - |
+    if [[ ${PUBLISHABLE} == true ]]; then
+      ./scripts/publish.sh;
+    fi;
 
 script:
- - echo ${ASAN_OPTIONS}
- - npm test
+  - echo ${ASAN_OPTIONS}
+  - npm test
 
 after_success:
   - |
