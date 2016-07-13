@@ -7,7 +7,7 @@ Get general information and stats about a particular vector tile buffer. Meant a
 Installation
 
 ```
-npm install vtinfo
+npm install @mapbox/vtinfo
 ```
 
 Get information as JSON
@@ -41,7 +41,7 @@ console.log(info);
 // }
 ```
 
-Command line
+Command line (assumes you've installed the module globally with `-g`)
 
 ```bash
 vtinfo <path to tile>
