@@ -4,6 +4,12 @@ sudo: false
 
 cache: apt
 
+# don't re-build for tags so that [publish binary] is not re-run
+# https://github.com/travis-ci/travis-ci/issues/1532
+branches:
+  except:
+    - /^v[0-9]/
+
 addons:
   apt:
     sources: [ 'ubuntu-toolchain-r-test' ]
@@ -15,11 +21,13 @@ env:
 
 matrix:
   include:
-    # - os: osx
-    #   osx_image: xcode7.3
     - os: linux
     - os: linux
-      env: CXXFLAGS="-fsanitize=address" LDFLAGS="-fsanitize=address" NPM_FLAGS="--debug" ASAN_OPTIONS=detect_leaks=1
+      env: CXXFLAGS="-fsanitize=address" LDFLAGS="-fsanitize=address" NPM_FLAGS="--debug" ASAN_OPTIONS=detect_leaks=1 PUBLISHABLE=true
+    - os: osx
+      osx_image: xcode7
+      compiler: clang
+      env: PUBLISHABLE=true
 
 before_install:
  - source ./scripts/travis_setup.sh
@@ -30,6 +38,11 @@ before_install:
 
 install:
  - ASAN_OPTIONS=detect_leaks=0 npm install --build-from-source ${NPM_FLAGS}
+
+before_script:
+- if [[ ${PUBLISHABLE} == true ]]; then
+    ./scripts/publish.sh;
+  fi;
 
 script:
  - echo ${ASAN_OPTIONS}
