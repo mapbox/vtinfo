@@ -42,7 +42,7 @@ before_install:
   - which clang++
 
 install:
-  - npm install --build-from-source ${NPM_FLAGS}
+  - npm install --build-from-source ${NPM_FLAGS} --clang=1
 
 before_script:
   - node-pre-gyp package testpackage ${NPM_FLAGS}
