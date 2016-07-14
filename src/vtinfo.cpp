@@ -40,7 +40,6 @@ NAN_METHOD(info)
     v8::Local<v8::Object> out = Nan::New<v8::Object>();
     v8::Local<v8::Array> layers = Nan::New<v8::Array>();
     std::size_t layers_size = 0;
-    v8::Local<v8::Object> layer_obj = Nan::New<v8::Object>();
 
     try {
         // loop through layers
