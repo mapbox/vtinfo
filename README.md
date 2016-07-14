@@ -2,6 +2,8 @@
 
 Get general information and stats about a particular vector tile buffer. Meant as a lightweight replacement to Node Mapnik's [`mapnik.VectorTile.info()`](http://mapnik.org/documentation/node-mapnik/3.5/#VectorTile.info).
 
+[![Build Status](https://travis-ci.org/mapbox/vtinfo.svg?branch=master)](https://travis-ci.org/mapbox/vtinfo)
+
 # Usage
 
 Installation
