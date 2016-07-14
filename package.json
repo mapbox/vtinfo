@@ -23,7 +23,6 @@
   },
   "devDependencies": {
     "aws-sdk": "^2.4.6",
-    "documentation": "^4.0.0-beta5",
     "tape": "^4.5.1"
   },
   "binary": {
