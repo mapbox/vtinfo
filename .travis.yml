@@ -1,42 +1,66 @@
 language: generic
-
 sudo: false
-
 cache: apt
+
+# prevent tags from building
+branches:
+  except:
+    - "/^v[0-9]/"
 
 addons:
   apt:
-    sources: [ 'ubuntu-toolchain-r-test' ]
-    packages: [ 'libstdc++6','libstdc++-5-dev' ]
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libstdc++6
+      - libstdc++-5-dev
 
 env:
   global:
-   - LSAN_OPTIONS=suppressions=scripts/leak_suppressions.txt
+    - ASAN_OPTIONS=detect_leaks=0
+    - LSAN_OPTIONS=suppressions=scripts/leak_suppressions.txt
+    - secure: jCgEjfJowDMtXsErV2L2DUHSXvDfDqJ77gxqJ9x3EbF4zcU9Gg5jFSZS1Gk0DtEbSQSYx5QmlE4ptzH0DoL+EnPiJEEtki86vVYuBFUpWWyrt8xiqTXYq39hH+1VIajr40xzyNZgoT6IN4DI0jWvXnXqhUOu7ci0DTZgOq6zeGsHvQrIgtH/Da4bgqcW85JnAzO3Sju9R5+Hf1czY5TMSCA0LVPTfKMEUHNlbcgWqrQ14sX144lqMO+OXYmD7FPHOfs/TwRNPo4bL1obG5IlAFpSMQr0EJytbko4y3NbyIHSID8HoRb3mysHlKpkxNyayRKZdwQijVjR6Cocy8d3NXmK0h3jxMJYSAqkYfCdL2WfNQVhJYs9JHBUQvHYsMdbwdcaOPiYJPHEQvljrDdLiT06TIDunj9hTmKWTXcTmAPSv9FBDpu+f8Kk96BBq7KTe6c727HC+K7m9t2cKiX/zP5OBSqdVZM9T8pyK1yUfp/ShZ3J6baZWk4H5MDrWMqvquQbGiab3I4GZCbbLWmL4iF6hT4ZpfwAi6iTfz8wmjAN19rBTrBdvvX1nl3EuUVFsOlkYZnhQJ5pW/ykhZBYejgu8tQoREVLvwdoTMUIzPoY/BgPczymvzz8/P4WcZtcghOyoJ/jrIGXQfNBGMDQKDS5uqUn8X4xrIEB+/4vHf0=
+    - secure: 6lEH09p52CQ1VqhcFQa/7FTGtLxdBZ0X0PU3izeNvRmyaHvYxvViUAWyXUzpH/fnmXRbO0bLl1W6Qhr/2J/HLBvfJIaTHTzziB6t11d1P4QYWIHXU03vgnp/6F1UcuG2wopp0oLUHlRHuX3EZqQ3PR4x9+rCuwcNZqQxN0e0iBgU3xYtXzLPtb8jhJE5MIIOjUzHLIlKSBLh9LTI85aKpoD5mKbiZwe9htkA0Y5FbPrq5CGpjhvpuahxENlZcWM1yx6iob6EJBhbG+Q72crGyQ2wuZsTX4yJiFJsLoG53vgYlqbIo1G11ohbW46NpngtC9XmozKYMh+YmbbMvtcgvvy4unv+55iSHfBw+5YgwTBr4+fOOs/uP131uv0U9AKMHz6FvcCYZvicTyJke4b8WDK8Hk4OYNyTsWDVudBFIVumxNhk6AClO03RkzEPWij6ayg2v4v+c6rLkR4eHXhApyMgdCVGNvmPC0dvOoOhESI2EZgJOWvrdQHhXW/ptzj9OTGCU78Po0C5rh5PdyegN19sQpjck1Y1xI7PtrI4ku0v9kLrr/mRzjollWln3ZjP8awL1O2M/kBYNHHm3PuAX6MKoIPAzkH+rVbhDUGMh/+qGa82ddob4n8y653GiMOyZmTBB1gFWPxN3+vHUpccWFrItfONbzRxrzZmVIW/3FI=
 
 matrix:
   include:
-    # - os: osx
-    #   osx_image: xcode7.3
+    # publishing
     - os: linux
+      env: PUBLISHABLE=true NODE_VERSION=4
+    - os: osx
+      osx_image: xcode7
+      compiler: clang
+      env: PUBLISHABLE=true NODE_VERSION=4
     - os: linux
-      env: CXXFLAGS="-fsanitize=address" LDFLAGS="-fsanitize=address" NPM_FLAGS="--debug" ASAN_OPTIONS=detect_leaks=1
+      env: NODE_ASAN=true CXXFLAGS="-fsanitize=address" LDFLAGS="-fsanitize=address" NPM_FLAGS="--debug" NODE_VERSION=4
 
 before_install:
- - source ./scripts/travis_setup.sh
- - node -v
- - which node
- - clang++ -v
- - which clang++
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      rvm get head || true
+    fi
+  - source ./scripts/install_node.sh ${NODE_VERSION}
+  - source ./scripts/travis_setup.sh
+  - node -v
+  - which node
+  - clang++ -v
+  - which clang++
 
 install:
- - ASAN_OPTIONS=detect_leaks=0 npm install --build-from-source ${NPM_FLAGS}
+  - npm install --build-from-source ${NPM_FLAGS} --clang=1
+
+before_script:
+  - ./node_modules/.bin/node-pre-gyp package testpackage ${NPM_FLAGS}
+  - |
+    if [[ ${PUBLISHABLE} == true ]]; then
+      ./scripts/publish.sh;
+    fi;
 
 script:
- - echo ${ASAN_OPTIONS}
- - npm test
+  - ASAN_OPTIONS=detect_leaks=1 npm test
 
 after_success:
-  - |
+  - |-
     if [ -n "${COVERAGE}" ]; then
       bash <(curl -s https://codecov.io/bash)
     fi

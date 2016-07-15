@@ -29,7 +29,9 @@ function main() {
         export CXX=clang++
         export CC=clang
     fi
-    init_binary node_asan 4.4.5
+    if [[ ${NODE_ASAN:-} == 'true' ]]; then
+        init_binary node_asan 4.4.5
+    fi
 }
 
 main
@@ -37,3 +39,4 @@ main
 # set back to non-strict bash mode to avoid breaking travis itself
 set +eu
 set +o pipefail
+
