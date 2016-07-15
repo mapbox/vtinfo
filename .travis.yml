@@ -35,6 +35,10 @@ matrix:
       env: NODE_ASAN=true CXXFLAGS="-fsanitize=address" LDFLAGS="-fsanitize=address" NPM_FLAGS="--debug" NODE_VERSION=4
 
 before_install:
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      rvm get head || true
+    fi
   - source ./scripts/install_node.sh ${NODE_VERSION}
   - source ./scripts/travis_setup.sh
   - node -v
