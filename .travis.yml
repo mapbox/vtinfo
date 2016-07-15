@@ -50,7 +50,7 @@ install:
   - npm install --build-from-source ${NPM_FLAGS} --clang=1
 
 before_script:
-  - node-pre-gyp package testpackage ${NPM_FLAGS}
+  - ./node_modules/.bin/node-pre-gyp package testpackage ${NPM_FLAGS}
   - |
     if [[ ${PUBLISHABLE} == true ]]; then
       ./scripts/publish.sh;
