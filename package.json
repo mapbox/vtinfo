@@ -6,8 +6,7 @@
   "scripts": {
     "test": "tape test/*.test.js",
     "preinstall": "npm install node-pre-gyp",
-    "install": "node-pre-gyp install --fallback-to-build",
-    "docs": "documentation build src/*.cpp --polyglot -f md -o API.md"
+    "install": "node-pre-gyp install --fallback-to-build"
   },
   "homepage": "https://github.com/mapbox/vtinfo",
   "repository": {
