@@ -57,6 +57,7 @@ NAN_METHOD(info)
             std::uint64_t line_feature_count = 0;
             std::uint64_t polygon_feature_count = 0;
             std::uint64_t invalid_feature_count = 0;
+            std::uint64_t features_count = 0;
 
             while (layer.next()) {
                 switch(layer.tag()) {
@@ -109,8 +110,12 @@ NAN_METHOD(info)
                 }
             }
 
+            // features count
+            features_count = unknown_feature_count + point_feature_count + line_feature_count + polygon_feature_count + invalid_feature_count;
+
             layer_obj->Set(Nan::New("name").ToLocalChecked(), Nan::New<v8::String>(layer_name).ToLocalChecked());
             layer_obj->Set(Nan::New("version").ToLocalChecked(), Nan::New<v8::Number>(layer_version));
+            layer_obj->Set(Nan::New("features").ToLocalChecked(), Nan::New<v8::Number>(features_count));
             layer_obj->Set(Nan::New("unknown_features").ToLocalChecked(), Nan::New<v8::Number>(unknown_feature_count));
             layer_obj->Set(Nan::New("point_features").ToLocalChecked(), Nan::New<v8::Number>(point_feature_count));
             layer_obj->Set(Nan::New("line_features").ToLocalChecked(), Nan::New<v8::Number>(line_feature_count));
