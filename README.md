@@ -27,6 +27,7 @@ console.log(info);
 // { layers: 
 //    [ { name: 'landuse',
 //        version: 2,
+//        features: 5,
 //        unknown_features: 0,
 //        point_features: 0,
 //        line_features: 0,
@@ -34,6 +35,7 @@ console.log(info);
 //        invalid_features: 0 },
 //      { name: 'water',
 //        version: 2,
+//        features: 3,
 //        unknown_features: 0,
 //        point_features: 0,
 //        line_features: 0,
