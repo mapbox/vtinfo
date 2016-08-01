@@ -24,6 +24,12 @@ env:
 
 matrix:
   include:
+    # coverage
+    - os: linux
+      env: COVERAGE=true CXXFLAGS="--coverage" LDFLAGS="--coverage" NPM_FLAGS="--debug"
+    # sanitizer
+    - os: linux
+      env: NODE_ASAN=true CXXFLAGS="-fsanitize=address" LDFLAGS="-fsanitize=address" NPM_FLAGS="--debug"
     # publishing
     - os: linux
       env: PUBLISHABLE=true
@@ -31,10 +37,6 @@ matrix:
       osx_image: xcode7
       compiler: clang
       env: PUBLISHABLE=true
-    - os: linux
-      env: CXXFLAGS="--coverage" LDFLAGS="--coverage" NPM_FLAGS="--debug"
-    - os: linux
-      env: NODE_ASAN=true CXXFLAGS="-fsanitize=address" LDFLAGS="-fsanitize=address" NPM_FLAGS="--debug"
 
 before_install:
   - |
