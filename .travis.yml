@@ -60,7 +60,10 @@ script:
   - ASAN_OPTIONS=detect_leaks=1 npm test
 
 after_success:
-  - |-
+  - |
     if [ -n "${COVERAGE}" ]; then
-      bash <(curl -s https://codecov.io/bash)
+      which llvm-cov
+      curl -S -f https://codecov.io/bash -o codecov
+      chmod +x codecov
+      ./codecov -x "llvm-cov gcov"
     fi
