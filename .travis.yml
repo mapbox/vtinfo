@@ -67,5 +67,5 @@ script:
       which llvm-cov
       curl -S -f https://codecov.io/bash -o codecov
       chmod +x codecov
-      ./codecov -x "llvm-cov gcov" -Z -p ./build
+      ./codecov -x "llvm-cov gcov" -Z
     fi
