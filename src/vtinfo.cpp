@@ -86,7 +86,9 @@ NAN_METHOD(info)
                                 ++unknown_feature_count;
                             }
                             else {
+                                // LCOV_EXCL_START
                                 ++invalid_feature_count;
+                                // LCOV_EXCL_STOP
                             }
                         }
 
@@ -105,7 +107,7 @@ NAN_METHOD(info)
                         layer_version = layer.get_uint32();
                         break;
                     default:
-                        throw std::runtime_error("unknown field type " + std::to_string(layer.tag()) + " in layer");
+                        throw std::runtime_error("unknown field type " + std::to_string(layer.tag()) + " in layer"); // LCOV_EXCL_LINE
                         break;
                 }
             }
