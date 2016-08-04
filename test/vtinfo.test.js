@@ -30,7 +30,7 @@ test('fails with an invalid vector tile buffer', function(t) {
     var info = vtinfo(fakebuffer);
   } catch (err) {
     t.ok(err, 'expected an error');
-    t.ok(err.message.indexOf('There was an error decoding the vector tile buffer') > -1, 'expected error message');
+    t.ok(err.message.indexOf('unknown pbf field type exception') > -1, 'expected error message');
   }
   t.end();
 });

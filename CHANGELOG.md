@@ -1,3 +1,7 @@
+## 0.0.4
+
+- use error from Protozero within try/catch
+
 ## 0.0.3
 
 - add `layer.features` count of all features
