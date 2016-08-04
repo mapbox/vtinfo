@@ -23,6 +23,7 @@
  */
 NAN_METHOD(info)
 {
+
     v8::Local<v8::Object> buffer = info[0]->ToObject();
     if (buffer->IsNull() || buffer->IsUndefined() || !node::Buffer::HasInstance(buffer)) {
         Nan::ThrowTypeError("First argument must be a valid buffer.");
@@ -44,6 +45,7 @@ NAN_METHOD(info)
     try {
         // loop through layers
         while (vt_reader.next(3)) {
+            
             auto layer_data = vt_reader.get_data();
             protozero::pbf_reader layer(layer_data);
 
@@ -126,7 +128,7 @@ NAN_METHOD(info)
             layers->Set(layers_size++, layer_obj);
         }
     } catch (std::exception const& ex) {
-      Nan::ThrowTypeError("There was an error decoding the vector tile buffer.");
+      Nan::ThrowTypeError(ex.what());
     }
 
     out->Set(Nan::New("layers").ToLocalChecked(), layers);
