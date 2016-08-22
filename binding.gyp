@@ -6,7 +6,7 @@
       'sources': [ './src/vtinfo.cpp' ],
       'include_dirs': [
         '<!(node -e \'require("nan")\')',
-        'node_modules/protozero/include'
+        '<!(node -e \'require("protozero")\')'
       ],
       'ldflags': [
         '-Wl,-z,now',
