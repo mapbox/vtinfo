@@ -1,3 +1,7 @@
+## 0.0.5
+
+- Update protozero dependency and `require` instead of pointing to the header files. [#11](https://github.com/mapbox/vtinfo/pull/11)
+
 ## 0.0.4
 
 - use error from Protozero within try/catch
