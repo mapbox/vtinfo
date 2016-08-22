@@ -18,7 +18,7 @@
   "dependencies": {
     "nan": "^2.3.5",
     "node-pre-gyp": "^0.6.28",
-    "protozero": "https://github.com/mapbox/protozero/tarball/include_dirs"
+    "protozero": "~1.4.1"
   },
   "devDependencies": {
     "aws-sdk": "^2.4.6",
