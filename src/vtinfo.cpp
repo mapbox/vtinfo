@@ -50,7 +50,7 @@ NAN_METHOD(info)
             protozero::pbf_reader layer(layer_data);
 
             v8::Local<v8::Object> layer_obj = Nan::New<v8::Object>();
-            
+
             // set up keys for layer_obj
             std::string layer_name;
             std::uint32_t layer_version;
@@ -60,6 +60,11 @@ NAN_METHOD(info)
             std::uint64_t polygon_feature_count = 0;
             std::uint64_t invalid_feature_count = 0;
             std::uint64_t features_count = 0;
+
+            // set up vector for keys
+            std::vector<std::string> keys_vector;
+            v8::Local<v8::Array> keys = Nan::New<v8::Array>();
+            std::size_t keys_size = 0;
 
             while (layer.next()) {
                 switch(layer.tag()) {
@@ -93,11 +98,10 @@ NAN_METHOD(info)
                                 // LCOV_EXCL_STOP
                             }
                         }
-
                         break;
                     }
                     case 3: // key
-                        layer.skip();
+                        keys_vector.push_back(layer.get_string());
                         break;
                     case 4: // value
                         layer.skip();
@@ -114,6 +118,11 @@ NAN_METHOD(info)
                 }
             }
 
+            // keys array
+            for ( auto i = keys_vector.begin(); i != keys_vector.end(); i++ ) {
+                keys->Set(keys_size++, Nan::New<v8::String>(*i).ToLocalChecked());
+            }
+
             // features count
             features_count = unknown_feature_count + point_feature_count + line_feature_count + polygon_feature_count + invalid_feature_count;
 
@@ -125,6 +134,7 @@ NAN_METHOD(info)
             layer_obj->Set(Nan::New("line_features").ToLocalChecked(), Nan::New<v8::Number>(line_feature_count));
             layer_obj->Set(Nan::New("polygon_features").ToLocalChecked(), Nan::New<v8::Number>(polygon_feature_count));
             layer_obj->Set(Nan::New("invalid_features").ToLocalChecked(), Nan::New<v8::Number>(invalid_feature_count));
+            layer_obj->Set(Nan::New("keys").ToLocalChecked(), keys);
 
             // add layer object to final layers array
             layers->Set(layers_size++, layer_obj);
