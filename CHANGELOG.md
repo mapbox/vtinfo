@@ -1,3 +1,7 @@
+## 0.1.1
+
+- Optimize protozero usage by replacing `protozero::pbf_reader` with `protozero::data_view`, which provides pointers to the keys instead.
+
 ## 0.1.0
 
 - Add `keys` value to the response for each layer. `keys` in array of strings that represent all the existing keys in the properties of the features of the vector tile.
