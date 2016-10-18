@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/vtinfo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Get general information and stats about a particular vector tile buffer.",
   "main": "./lib/index.js",
   "scripts": {
