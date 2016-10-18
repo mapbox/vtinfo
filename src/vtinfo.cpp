@@ -62,9 +62,7 @@ NAN_METHOD(info)
             std::uint64_t features_count = 0;
 
             // set up vector for keys
-            std::vector<std::string> keys_vector;
-            v8::Local<v8::Array> keys = Nan::New<v8::Array>();
-            std::size_t keys_size = 0;
+            std::vector<protozero::data_view> keys_vector;
 
             while (layer.next()) {
                 switch(layer.tag()) {
@@ -101,7 +99,7 @@ NAN_METHOD(info)
                         break;
                     }
                     case 3: // key
-                        keys_vector.push_back(layer.get_string());
+                        keys_vector.push_back(layer.get_view());
                         break;
                     case 4: // value
                         layer.skip();
@@ -119,8 +117,11 @@ NAN_METHOD(info)
             }
 
             // keys array
-            for ( auto i = keys_vector.begin(); i != keys_vector.end(); i++ ) {
-                keys->Set(keys_size++, Nan::New<v8::String>(*i).ToLocalChecked());
+            std::size_t idx = 0;
+            std::size_t keys_size = keys_vector.size();
+            v8::Local<v8::Array> keys = Nan::New<v8::Array>(keys_size);
+            for ( auto const& key_view : keys_vector) {
+                keys->Set(idx++, Nan::New<v8::String>(key_view.to_string()).ToLocalChecked());
             }
 
             // features count
