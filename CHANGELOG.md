@@ -1,3 +1,7 @@
+## 0.1.2
+
+- Prettify output to prevent `[Object]` from printing in your shell [#15](https://github.com/mapbox/vtinfo/pull/15)
+
 ## 0.1.1
 
 - Optimize protozero usage by replacing `protozero::pbf_reader` with `protozero::data_view`, which provides pointers to the keys instead.
