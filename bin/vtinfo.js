@@ -25,7 +25,7 @@ try {
 
 // now try vtinfo
 try {
-  console.log(vtinfo(buffer));
+  console.log(JSON.stringify(vtinfo(buffer),0,2));
   process.exit(0);
 } catch (err) {
   console.warn(err);
