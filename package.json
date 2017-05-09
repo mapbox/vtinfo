@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "scripts": {
     "test": "tape test/*.test.js",
-    "preinstall": "npm install node-pre-gyp",
+    "prepublish": "npm ls",
     "install": "node-pre-gyp install --fallback-to-build"
   },
   "homepage": "https://github.com/mapbox/vtinfo",
@@ -20,6 +20,7 @@
     "node-pre-gyp": "^0.6.28",
     "protozero": "~1.4.1"
   },
+  "bundledDependencies":["node-pre-gyp"],
   "devDependencies": {
     "aws-sdk": "^2.4.6",
     "tape": "^4.5.1"
