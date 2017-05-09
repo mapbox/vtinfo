@@ -6,13 +6,8 @@ set -o pipefail
 MASON_VERSION="master"
 
 function setup_mason() {
-    if [[ ! -d ./.mason ]]; then
-        git clone https://github.com/mapbox/mason.git ./.mason
-        (cd ./.mason && git checkout ${MASON_VERSION})
-    else
-        echo "Updating to latest mason"
-        (cd ./.mason && git fetch && git checkout ${MASON_VERSION})
-    fi
+    mkdir -p ./.mason
+    curl -sSfL https://github.com/mapbox/mason/archive/v0.10.0.tar.gz | tar --gunzip --extract --strip-components=1 --exclude="*md" --exclude="test*" --directory=./.mason
     export PATH=$(pwd)/.mason:$PATH
 }
 
@@ -25,7 +20,7 @@ function init_binary() {
 function main() {
     setup_mason
     if [[ $(uname -s) == 'Linux' ]]; then
-        init_binary clang 3.8.0
+        init_binary clang 3.9.1
         export CXX=clang++
         export CC=clang
     fi
