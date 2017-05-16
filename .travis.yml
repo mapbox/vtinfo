@@ -62,7 +62,7 @@ script:
   - |
     if [ -n "${COVERAGE}" ]; then
       mason install llvm-cov 3.9.1
-      export PATH+$(mason prefix llvm-cov 3.9.1)/bin:${PATH}
+      export PATH=$(mason prefix llvm-cov 3.9.1)/bin:${PATH}
       which llvm-cov
       curl -S -f https://codecov.io/bash -o codecov
       chmod +x codecov
