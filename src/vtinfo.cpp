@@ -4,7 +4,6 @@
 #include <iostream>
 #include <utility>
 #include <protozero/pbf_reader.hpp>
-#include <protozero/pbf_writer.hpp>
 
 /**
  * Create an array of JSON objects for each layer in the vector tile buffer to
