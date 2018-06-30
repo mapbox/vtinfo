@@ -45,7 +45,7 @@ NAN_METHOD(info)
     try {
         // loop through layers
         while (vt_reader.next(3)) {
-            
+
             auto layer_data = vt_reader.get_data();
             protozero::pbf_reader layer(layer_data);
 
@@ -53,7 +53,7 @@ NAN_METHOD(info)
 
             // set up keys for layer_obj
             std::string layer_name;
-            std::uint32_t layer_version;
+            std::uint32_t layer_version = 1;
             std::uint64_t unknown_feature_count = 0;
             std::uint64_t point_feature_count = 0;
             std::uint64_t line_feature_count = 0;
