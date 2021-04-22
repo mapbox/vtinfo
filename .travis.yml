@@ -63,7 +63,9 @@ script:
   - |
     if [ -n "${COVERAGE}" ]; then
       which llvm-cov
-      curl -S -f https://codecov.io/bash -o codecov
-      chmod +x codecov
-      ./codecov -x "llvm-cov gcov" -Z
+      # - NOTE: we are disabling the codecov bash uploader due to https://about.codecov.io/security-update/
+      # - This should be replaced with the node uploader in the future
+      # curl -S -f https://codecov.io/bash -o codecov
+      # chmod +x codecov
+      # ./codecov -x "llvm-cov gcov" -Z
     fi
